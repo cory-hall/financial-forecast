@@ -2,7 +2,7 @@
 let db;
 
 // establish a connection to IndexedDB database called 'transactions' and set it to version 1
-const request = indexedDB.open('transactions', 1);
+const request = indexedDB.open('budget', 1);
 
 // this event will emit if the database version changes (nonexistent to version 1, v1, to v2, etc.)
 request.onupgradeneeded = function (e) {
@@ -29,13 +29,13 @@ request.onerror = function (e) {
 };
 
 // this function will be executed if we attempt to submit a new pizza and there's no internet connection
-function saveRecord(record) {
+function saveRecord(transaction) {
   const transaction = db.transaction(['new_transaction'], 'readwrite');
 
   const transactionObjectStore = transaction.objectStore('new_transaction');
 
   // add record to your store with add method
-  transactionObjectStore.add(record);
+  transactionObjectStore.add(transaction);
 };
 
 function uploadTransaction() {
@@ -46,7 +46,7 @@ function uploadTransaction() {
   const transactionObjectStore = transaction.objectStore('new_transaction');
 
   // get all records from store and set to a variable
-  const getAll = transaction.getAll();
+  const getAll = transactionObjectStore.getAll();
 
   getAll.onsuccess = function () {
     // if there was data in the indexedDB's store, let's send it to the api server
