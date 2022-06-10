@@ -29,13 +29,13 @@ request.onerror = function (e) {
 };
 
 // this function will be executed if we attempt to submit a new pizza and there's no internet connection
-function saveRecord(transaction) {
+function saveRecord(record) {
   const transaction = db.transaction(['new_transaction'], 'readwrite');
 
   const transactionObjectStore = transaction.objectStore('new_transaction');
 
   // add record to your store with add method
-  transactionObjectStore.add(transaction);
+  transactionObjectStore.add(record);
 };
 
 function uploadTransaction() {
@@ -51,7 +51,7 @@ function uploadTransaction() {
   getAll.onsuccess = function () {
     // if there was data in the indexedDB's store, let's send it to the api server
     if (getAll.result.length > 0) {
-      fetch("/api/transaction", {
+      fetch("/api/transaction/bulk", {
         method: "POST",
         body: JSON.stringify(getAll.result),
         headers: {
